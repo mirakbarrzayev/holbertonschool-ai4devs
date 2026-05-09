@@ -1,6 +1,6 @@
-# UI Component Prompt Template
+## UI Component Prompt Template
 
-**Role**: Frontend Developer
-**Task**: [FRAMEWORK] (məsələn, Bootstrap, React) istifadə edərək responsiv bir komponent dizayn et.
-**Input Placeholder**: [UI_REQUIREMENTS]
-**Expected Output**: HTML/CSS və ya komponent kodu.
+**Role:** Frontend Developer
+**Task:** Verilən tələblərə əsasən responsiv bir UI komponenti dizayn et.
+**Input Placeholder:** [UI_REQUIREMENTS], [FRAMEWORK_E_G_REACT_BOOTSTRAP]
+**Expected Output:** Seçilmiş framework-ə uyğun HTML/CSS və ya komponent kodu.
