@@ -1,12 +1,11 @@
-# Risk Assessment Report
+# Detailed Risk Assessment Report
 
-| Risk Name | Severity | Notes |
+| Risk Name | Severity | Detailed Context & Actionable Notes |
 | :--- | :--- | :--- |
-| Hardcoded Credentials | High | `config.php` faylında şifrələr və API açarları birbaşa yazılıb. Repozitoriyaya giriş olan hər kəs bazaya sızma edə bilər. |
-| SQL Injection Vulnerability | High | İstifadəçi girişləri (input) sanitizasiya olunmur. Hücumçular bazanı oğurlaya və ya silə bilər. |
-| Deprecated API Usage | High | Köhnəlmiş PHP funksiyalarından istifadə olunur. Server yenilənməsində tətbiq tamamilə fəaliyyətini dayandıra bilər. |
-| Insecure File Permissions | Medium | Konfiqurasiya faylları "world-readable" statusundadır. Serverdəki digər istifadəçilər həssas məlumatları oxuya bilər. |
-| Missing Unit Tests | Medium | Kritik modulların testi yoxdur. Dəyişikliklər proqramın digər hissələrini sıradan çıxara bilər (Regression). |
-| Tight Coupling | Medium | Modullar arasındakı asılılıq çoxdur. Bu, kodun oxunmasını çətinləşdirir və texniki borcu (technical debt) artırır. |
-| No Logging Mechanism | Low | Sistem xətaları qeydə alınmır. Nasazlıqların səbəbini tapmaq və debugging prosesi çox vaxt aparır. |
-| Lack of Rate Limiting | Medium | Login hissəsində "brute-force" hücumlarına qarşı limit yoxdur. Şifrələr asanlıqla sındırıla bilər. |
+| **Hardcoded Credentials** | **Critical (High)** | **Description:** `config.php` daxilində DB_PASSWORD və API_KEY birbaşa mətn formasında saxlanılır.<br>**Impact:** Sistemə sızma ehtimalı 100%-dir.<br>**Mitigation:** Bu məlumatlar `.env` faylına köçürülməli və `vlucas/phpdotenv` kitabxanası ilə oxunmalıdır. |
+| **SQL Injection** | **Critical (High)** | **Description:** `$conn->query("SELECT * FROM users WHERE id = " . $_GET['id'])` kimi təmizlənməmiş sorğular istifadə olunur.<br>**Impact:** Bütün istifadəçi bazası oğurlana bilər.<br>**Mitigation:** Mütləq "Prepared Statements" (PDO və ya MySQLi) istifadə edilməlidir. |
+| **Insecure File Permissions** | **Medium** | **Description:** Həssas faylların icazələri `777` və ya `644` (world-readable) olaraq qalıb.<br>**Impact:** Eyni serverdəki digər tətbiqlər sizin konfiqurasiya fayllarınızı oxuya bilər.<br>**Mitigation:** İcazələr fayllar üçün `640`, qovluqlar üçün `750` dərəcəsinə endirilməlidir. |
+| **Deprecated API Usage** | **High** | **Description:** Artıq dəstəklənməyən `mysql_*` funksiyalarından istifadə edilir.<br>**Impact:** PHP 8.0+ versiyasına keçid zamanı tətbiq dərhal çökəcək.<br>**Mitigation:** Bütün verilənlər bazası funksiyaları PDO (PHP Data Objects) ilə əvəzlənməlidir. |
+| **Missing Unit Tests** | **Medium** | **Description:** Ödəniş və qeydiyyat modulları üçün avtomatlaşdırılmış testlər yoxdur.<br>**Impact:** Yeni bir funksiya əlavə ediləndə köhnə sistemin harada qırıldığını bilmək mümkün olmayacaq.<br>**Mitigation:** `PHPUnit` framework-ü qurulmalı və əsas biznes məntiqləri testlərlə əhatə olunmalıdır. |
+| **Lack of Rate Limiting** | **High** | **Description:** `/login` endpoint-i saniyədə limitsiz sorğu qəbul edir.<br>**Impact:** Hücumçular avtomatlaşdırılmış botlarla "Brute Force" edərək şifrələri qıra bilər.<br>**Mitigation:** Redis və ya bazada `login_attempts` cədvəli yaradılaraq, 5 uğursuz cəhddən sonra bloklama mexanizmi qurulmalıdır. |
+| **Tight Coupling** | **Low/Medium** | **Description:** Modullar bir-birinə birbaşa obyekt instansiyaları ilə bağlıdır.<br>**Impact:** Bir modulu dəyişmək bütün sistemi test etməyi tələb edir, bu da inkişaf sürətini azaldır.<br>**Mitigation:** "Dependency Injection" (DI) prinsipləri tətbiq edilməlidir. |
