@@ -1,0 +1,37 @@
+graph TD
+%% Xarici İstifadəçi İnterfeysi (Fərqli Adla)
+    Frontend[Təhsil Platformasının Web/Mobile CLI UI]
+
+%% Backend Monolit (Fərqli Modul Adları ilə)
+    subgraph "Backend - Monolit Tətbiq"
+    
+        Frontend --> |İstək Göndərir| API_Gateway[API Gateway Modulu]
+        
+        %% Əsas Biznes Məntiqi (Yenidən adlandırılıb)
+        subgraph "Biznes Məntiqi Təbəqəsi"
+            API_Gateway --> |Autentifikasiya| UserManager[User & Profile Manager]
+            API_Gateway --> |Məzmun| CourseContent[Course & Resource Content Modulu]
+            API_Gateway --> |Yoxlama| GradingCore[Automated Grading & Feedback Core]
+            API_Gateway --> |Rəqabət| Leaderboard[Leaderboard & Achievements System]
+        end
+        
+        %% Yardımçı Xidmətlər (Yenidən adlandırılıb)
+        subgraph "Yardımçı Modullar"
+            GradingCore --> |Tələb Edir| CodeRunner[Secure Code Runner (Sandbox)]
+            GradingCore --> |Tələb Edir| PlagiarismCheck[Plagiarism Detector Service]
+            CourseContent --> |İnteqrasiya edir| AI_Copilot[AI Assistant Copilot Module]
+        end
+        
+        %% Məlumat Girişi (Yenidən adlandırılıb)
+        UserManager --> |SQL Oxuma/Yazma| DB_Access[Database Access Layer (DAL)]
+        CourseContent --> |SQL Oxuma/Yazma| DB_Access
+        GradingCore --> |SQL Oxuma/Yazma| DB_Access
+        Leaderboard --> |SQL Oxuma/Yazma| DB_Access
+    end
+
+%% Məlumat Bazası (Xarici/Aşağıda)
+    DB_Access --> |SQL Sorğuları| MainDatabase[(Əsas SQL Məlumat Bazası)]
+
+%% Stil tərifi (Mətnləri aydınlaşdırmaq üçün)
+    classDef yellow fill:#ff9,stroke:#333,stroke-width:2px;
+    class Frontend yellow;
